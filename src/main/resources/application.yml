@@ -1,0 +1,40 @@
+test-task:
+  data-sources:
+    - name: h2-database
+      strategy: h2
+      url: "jdbc:h2:tcp://h2-db:9092/testdb"
+      table: users
+      tag: user
+      user: sa
+      password: secret
+      mapping:
+        id: "user_id"
+        username: "login"
+        name: "first_name"
+        surname: "last_name"
+
+    - name: sqlite-database
+      strategy: sqlite
+      url: "jdbc:sqlite:/data/sqlite/test.db"
+      table: user_table
+      tag: user
+      user: appuser
+      password: apppass
+      mapping:
+        id: "ldap_login"
+        username: "ldap_login"
+        name: "name"
+        surname: "surname"
+
+    - name: postgres-database
+      strategy: postgres
+      url: "jdbc:postgresql://postgres:5432/testdb"
+      table: postgres_users
+      tag: user
+      user: testuser
+      password: testpass
+      mapping:
+        id: "id"
+        username: "username"
+        name: "name"
+        surname: "surname"

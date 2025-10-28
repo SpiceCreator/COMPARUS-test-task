@@ -1,0 +1,90 @@
+openapi: 3.1.0
+info:
+  title: User API
+  version: 1.0.0
+  description: API to fetch users from multiple datasources
+
+paths:
+  /users:
+    get:
+      summary: Get all users
+      description: Returns a list of users
+      operationId: getAllUsers
+      parameters:
+        - name: dataSourceName
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
+          description: Name(s) of the data sources to query
+        - name: id
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
+          description: Filter by one or more user IDs
+        - name: username
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
+          description: Filter by one or more usernames
+        - name: name
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
+          description: Filter by one or more names
+        - name: surname
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
+          description: Filter by one or more surnames
+      responses:
+        "200":
+          description: Successful response with a list of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 1 / 0x1234...
+        username:
+          type: string
+          example: john_doe
+        name:
+          type: string
+          example: John
+        surname:
+          type: string
+          example: Doe
+      required:
+        - id
+        - username
+        - name
+        - surname

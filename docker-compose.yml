@@ -1,0 +1,72 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: postgres-db
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-testdb}
+      POSTGRES_USER: ${POSTGRES_USER:-testuser}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-testpass}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./src/main/resources/db/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-testuser} -d ${POSTGRES_DB:-testdb} >/dev/null 2>&1"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  sqlite:
+    image: nouchka/sqlite3:latest
+    container_name: sqlite-db
+    volumes:
+      - sqlite-data:/data/sqlite
+      - ./src/main/resources/db/sqlite/init.sql:/init.sql:ro
+    entrypoint: [ "sh", "-c", "echo 'Initializing SQLite...'; sqlite3 /data/sqlite/test.db < /init.sql || exit 1; echo 'SQLite init complete.'; tail -f /dev/null" ]
+    healthcheck:
+      test: [ "CMD-SHELL", "sh -c 'test -f /data/sqlite/test.db'" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+
+  h2:
+    build:
+      context: ./src/main/resources/db/h2
+      dockerfile: Dockerfile
+    container_name: h2-db
+    environment:
+      H2_OPTIONS: "-tcp -tcpAllowOthers -ifNotExists -baseDir /data"
+    ports:
+      - "9092:9092"
+      - "81:81"
+    volumes:
+      - ./data/h2:/data/h2
+      - ./src/main/resources/db/h2/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - ./src/resources/db/h2/init.sh:/init.sh:ro
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f http://localhost:81 || exit 1" ]
+      interval: 5s
+      retries: 10
+
+  app:
+    build: .
+    container_name: user-app
+    depends_on:
+      postgres:
+        condition: service_healthy
+      sqlite:
+        condition: service_healthy
+      h2:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: "docker"
+    volumes:
+      - sqlite-data:/data/sqlite
+
+volumes:
+  postgres-data:
+  sqlite-data:
