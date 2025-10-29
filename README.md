@@ -1,7 +1,11 @@
 # COMPARUS-test-task
 
+Project was developed with the next assumptions:
+- Openapi contract is used in the code-first approach
+- Service is about to be extended with new endpoints, so it's able to separate user-related tables from application.yml
+
 Service is fetching data from 3 databases. (h2, sqlite and postgresql)
-All of them are run and initialized in docker-compose.yml
+All of them as well as the main application are run and initialized in docker-compose.yml
 
 You can start it with: `docker-compose up` or `docker-compose up -d` (as a daemon)
 
@@ -13,21 +17,23 @@ You can change data in each database manually after run or by updating init.sql 
 
 You can access databases:
 
-h2: jdbc:h2:tcp://localhost:9092/testdb
-user: sa
-password: secret
+### h2: 
+- url: jdbc:h2:tcp://localhost:9092/testdb
+- user: sa
+- password: secret
 
-postgresql: jdbc:postgresql://localhost:5432/testdb
-user: testuser
-password: testpass
+### postgresql: 
+- url: jdbc:postgresql://localhost:5432/testdb
+- user: testuser
+- password: testpass
 
-sqlite:
-Run in terminal:
-docker exec -it sqlite-db sh
-sqlite3 /data/sqlite/test.db
-Here you can run any sql queries.
+### sqlite:
+#### Run in terminal:
+- `docker exec -it sqlite-db sh` - to access volume.
+- `sqlite3 /data/sqlite/test.db` - to access sqlite database.
+- Here you can run any sql queries.
 
-You can stop it with: `ctrl+c` or `docker-compose down` (for daemon)
+You can stop docker-compose with: `ctrl+c` or `docker-compose down` (for daemon)
 
 # Project structure
 ## Resources
