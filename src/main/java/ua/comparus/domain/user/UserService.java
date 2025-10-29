@@ -1,4 +1,4 @@
-package ua.comparus.user;
+package ua.comparus.domain.user;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;

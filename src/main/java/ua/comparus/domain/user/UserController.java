@@ -1,4 +1,4 @@
-package ua.comparus.user;
+package ua.comparus.domain.user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

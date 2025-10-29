@@ -1,4 +1,4 @@
-package ua.comparus.user;
+package ua.comparus.domain.user;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,6 +18,8 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import ua.comparus.config.database.DataSourceStorage;
 import ua.comparus.config.database.SourceTable;
+import ua.comparus.domain.user.User;
+import ua.comparus.domain.user.UserService;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
